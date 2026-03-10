@@ -11,6 +11,10 @@ bootJar {
     archiveFileName = 'netschach-bot.jar'
 }
 
+springBoot {
+    buildInfo()
+}
+
 repositories {
     mavenCentral()
 }
