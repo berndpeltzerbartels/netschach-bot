@@ -1,6 +1,13 @@
 FROM eclipse-temurin:23-jdk
 
-RUN apt-get update && apt-get install -qy git stockfish && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -qy git wget && rm -rf /var/lib/apt/lists/*
+
+# Stockfish 18 (stable) direkt von GitHub - ARM64
+RUN wget -q https://github.com/official-stockfish/Stockfish/releases/download/sf_18/stockfish-ubuntu-aarch64.tar && \
+    tar -xf stockfish-ubuntu-aarch64.tar && \
+    mv stockfish/stockfish-ubuntu-aarch64 /usr/local/bin/stockfish && \
+    chmod +x /usr/local/bin/stockfish && \
+    rm -rf stockfish stockfish-ubuntu-aarch64.tar
 
 WORKDIR /app
 RUN git clone -c credential.helper= https://github.com/berndpeltzerbartels/netschach-bot.git . && \
