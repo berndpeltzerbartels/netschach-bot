@@ -56,6 +56,10 @@ dependencies {
 
     // Optional: explizite SLF4J API für Lombok @Slf4j
     implementation 'org.slf4j:slf4j-api:2.0.9'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.36'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
+
 }
 
 

@@ -6,7 +6,8 @@ import de.netschach.chess2.MoveParser;
 import de.netschach.event.FindBestMoveEvent;
 import de.netschach.event.GameOverEvent;
 import de.netschach.fen.FenParser;
-import lombok.extern.log4j.Log4j2;
+import de.netschach.stockfish.Elo;
+import de.netschach.stockfish.Level;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ApplicationEventMulticaster;
@@ -28,14 +29,21 @@ class GameService {
     @Autowired
     private FenParser fenParser;
 
-    void bestMove(String requestId, int level, List<String> moves, String callback) throws IllegalMoveException, NoSuchElementException {
-        GameBoard gameBoard = moveParser.parse(moves);
-        bestMove(requestId, level, gameBoard, callback);
-    }
-
-    void bestMove(String requestId, int level, String fen, List<String> moves, String callback) throws IllegalMoveException, NoSuchElementException {
-        GameBoard gameBoard = moveParser.parse(fenParser.parseFen(fen), moves);
-        bestMove(requestId, level, gameBoard, callback);
+    void bestMove(String requestId, Integer level, Integer elo, int timeLimit, String fen, List<String> moves, String callback) throws IllegalMoveException, NoSuchElementException {
+        var startBoard = fen != null ? fenParser.parseFen(fen) : GameBoard.startPosition();
+        var gameBoard = moveParser.parse(startBoard, moves);
+        if (gameBoard.getStatus().isGameOver()) {
+            multicaster.multicastEvent(new GameOverEvent(requestId, gameBoard, callback));
+            return;
+        }
+        var bestMoveEvent = new FindBestMoveEvent(requestId, gameBoard, timeLimit, callback);
+        if (level != null) {
+            bestMoveEvent.setLevel(new Level(level));
+        }
+        if (elo != null) {
+            bestMoveEvent.setElo(new Elo(elo));
+        }
+        multicaster.multicastEvent(bestMoveEvent);
     }
 
     GameStatusTO gameStatus(List<String> moves) {
@@ -46,14 +54,5 @@ class GameService {
         GameBoard gameBoard = moveParser.parse(fenParser.parseFen(fen), moves);
         return GameStatusTO.create(gameBoard);
     }
-
-    private void bestMove(String requestId, int level, GameBoard gameBoard, String callback) {
-        if (gameBoard.getStatus().isGameOver()) {
-            multicaster.multicastEvent(new GameOverEvent(requestId, gameBoard, callback));
-            return;
-        }
-        multicaster.multicastEvent(new FindBestMoveEvent(requestId, gameBoard, level, callback));
-    }
-
 
 }

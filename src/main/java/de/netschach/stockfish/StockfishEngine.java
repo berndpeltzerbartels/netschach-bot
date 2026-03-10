@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Slf4j
 class StockfishEngine {
 
-    static final int MAX_LEVEL = 20;
+    static final Level MAX_LEVEL = new Level(20);
     private static final String KEY_CHECKERS = "Checkers:";
     private static final String KEY_BEST_MOVE = "bestmove";
     private static final String KEY_FEN = "Fen:";
@@ -69,7 +69,7 @@ class StockfishEngine {
         this.engineProcess = Runtime.getRuntime().exec(stockfishPath);
         this.processReader = new BufferedReader(new InputStreamReader(this.engineProcess.getInputStream()));
         this.processWriter = new BufferedWriter(new OutputStreamWriter(this.engineProcess.getOutputStream()));
-        this.sendCommand("uci");
+        this.sendCommand("uci"); // Sonst geht Elo nicht
     }
 
     synchronized boolean isAlive() {
@@ -99,14 +99,14 @@ class StockfishEngine {
         return extractValues(KEY_FEN, output);
     }
 
-    synchronized void setLevel(int level) throws IOException {
+    synchronized void setLevel(Level level) throws IOException {
         this.setOption("UCI_LimitStrength", false);
-        this.setOption("Skill Level", level);
+        this.setOption("Skill Level", level.value());
     }
 
-    synchronized  void setElo(int elo) throws IOException {
+    synchronized void setElo(Elo elo) throws IOException {
         this.setOption("UCI_LimitStrength", true);
-        this.setOption("UCI_Elo", elo);
+        this.setOption("UCI_Elo", elo.value());
     }
 
     synchronized void setMinimumThinkingTime(int timeMillis) throws IOException {
@@ -128,7 +128,7 @@ class StockfishEngine {
         return this.readBestMoveResult();
     }
 
-    synchronized StockfishBestMoveResult bestMoveWithLevel(int level) throws IOException {
+    synchronized StockfishBestMoveResult bestMoveWithLevel(Level level) throws IOException {
         this.setLevel(level);
         this.sendCommand("go");
         return this.readBestMoveResult();

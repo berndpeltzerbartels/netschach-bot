@@ -20,9 +20,11 @@ class StockfishTaskBuilder {
                 .callback(e.getCallbackUrl())
                 .gameBoard(e.getGameBoard())
                 .gameId(e.getRequestId())
+                .level(e.getLevel())
+                .elo(e.getElo())
+                .timeLimit(e.getTimeLimit())
                 .fen(fenParser.parseGameBoard(e.getGameBoard()))
                 .build();
-        StockfishLevels.setStockfishLevelAttributes(e.getLevel(), moveNumber, task);
         log.info("stockfish-task created for {}: move-number={},level={}, timelimit={}", task.getGameId(), moveNumber, task.getLevel(), task.getTimeLimit());
         log.info("fen for {} in stockfish-task: {}", task.getGameId(), task.getFen());
         return task;

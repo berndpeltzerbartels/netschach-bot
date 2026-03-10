@@ -44,6 +44,7 @@ public abstract class Piece {
         throw new IllegalArgumentException("type=" + type);
     }
 
+    @SuppressWarnings("unchecked")
     public static Piece createInstance(Class<? extends Piece> pieceType, Color color) {
         try {
             Constructor<Piece> constructor = (Constructor<Piece>) pieceType.getDeclaredConstructor(Color.class);

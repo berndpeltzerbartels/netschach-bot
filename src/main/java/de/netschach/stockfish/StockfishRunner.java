@@ -90,7 +90,6 @@ class StockfishRunner {
                             .callback(task.getCallback())
                             .waitingTime(task.getWaitingTime()).build());
                 } catch (Exception e) {
-                    e.printStackTrace();
                     log.warn(e.toString());
                 }
             }
@@ -104,10 +103,17 @@ class StockfishRunner {
 
         private String process(StockfishTask queueElement) throws Exception {
             log.info("Engine {}: processing {}, level: {}, timelimit: {}ms", index, queueElement.getGameId(), queueElement.getLevel(), queueElement.getTimeLimit());
-            engine.setLevel(queueElement.getLevel());
+            if (queueElement.getElo() != null) {
+                log.info("Engine {}: set elo to {}", index, queueElement.getElo());
+                engine.setElo(queueElement.getElo());
+            }
+            if (queueElement.getLevel() != null) {
+                log.info("Engine {}: set level to {}", index, queueElement.getLevel());
+                engine.setLevel(queueElement.getLevel());
+            }
             engine.setGameByFen(queueElement.getFen());
             StockfishBestMoveResult result = engine.bestMoveWithTimelimit(queueElement.getTimeLimit());
-            log.info("Engine " + index + ": processing " + queueElement.getGameId() + " done, best-move: " + result.getBestMove());
+            log.info("Engine {}: processing {} done, best-move: {}", index, queueElement.getGameId(), result.getBestMove());
             return result.getBestMove();
         }
 

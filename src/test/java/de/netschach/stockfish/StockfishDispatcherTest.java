@@ -34,7 +34,7 @@ class StockfishDispatcherTest {
 
     @Test
     void dispatch() {
-        StockfishTask task = StockfishTask.builder().gameId("1").level(20).timeLimit(2).build();
+        StockfishTask task = StockfishTask.builder().gameId("1").level(new Level(20)).timeLimit(2).build();
         dispatcher.dispatch(task);
 
         verify(this.runner2).addToQueue(eq(task));

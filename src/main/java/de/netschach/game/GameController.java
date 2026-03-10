@@ -1,7 +1,6 @@
 package de.netschach.game;
 
 import de.netschach.security.HostsAllowed;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,16 +32,13 @@ class GameController {
         String requestId = bestMoveRequest.getRequestId();
         List<String> moves = bestMoveRequest.getMoves() == null ? Collections.emptyList() : bestMoveRequest.getMoves();
         log.info("request-id: {}, callback: {}", requestId, callback);
-        if (StringUtils.isEmpty(bestMoveRequest.getFen())) {
-            gameService.bestMove(requestId, bestMoveRequest.getLevel(), moves, callback);
-        } else {
-            gameService.bestMove(requestId, bestMoveRequest.getLevel(), bestMoveRequest.getFen(), moves, callback);
-        }
+        gameService.bestMove(requestId, bestMoveRequest.getLevel(), bestMoveRequest.getElo(), bestMoveRequest.getTimeLimitMillis(), bestMoveRequest.getFen(), moves, callback);
         return ResponseEntity.noContent()
                 .header("Request-Id", requestId)
                 .header("Callback", callback)
                 .build();
     }
+
 
     @PostMapping("/v2/status")
     ResponseEntity<GameStatusTO> onStatusRequest(@RequestBody @Valid GameStatusRequest statusRequest, HttpServletRequest request, HttpServletResponse response) {
@@ -59,12 +55,12 @@ class GameController {
 
     private String callbackAddr(GameResponseCallback callback, HttpServletRequest httpRequest) {
         String host = callbackServer(callback, httpRequest);
-        return new StringBuilder(callback.getProtocol().name())
-                .append("://")
-                .append(host)
-                .append(":")
-                .append(callback.getPort())
-                .append(callback.getUri()).toString();
+        return callback.getProtocol().name() +
+                "://" +
+                host +
+                ":" +
+                callback.getPort() +
+                callback.getUri();
     }
 
     private String callbackServer(GameResponseCallback callback, HttpServletRequest httpRequest) {

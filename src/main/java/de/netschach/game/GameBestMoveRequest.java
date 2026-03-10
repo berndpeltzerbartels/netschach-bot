@@ -1,5 +1,6 @@
 package de.netschach.game;
 
+import jakarta.annotation.Nullable;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
 
@@ -46,11 +47,12 @@ class GameBestMoveRequest {
     private int timeLimitMillis;
 
     /**
+     * Optional, falls nicht angegeben, wird die Standardposition verwendet.
      * FEN-Notation einer Partie, Falls vorhanden, werden ggf. Züge (Feld „moves") auf diese Position angewendet.
      */
     private String fen;
     /**
-     * Züge in in beliebigem Format. Normales JSON-Array.
+     * Züge in beliebigem Format. Normales JSON-Array.
      */
     private List<String> moves = new ArrayList<>();
 

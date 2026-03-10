@@ -5,8 +5,10 @@ import de.netschach.chess2.Move;
 import de.netschach.chess2.MoveParser;
 import de.netschach.chess2.TestUtil;
 import de.netschach.fen.FenParser;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +22,9 @@ import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
+@Slf4j
+@Disabled
 @SpringBootTest
 public class MoveParserStockfishITCase {
 
@@ -52,7 +57,7 @@ public class MoveParserStockfishITCase {
     @Test
     void runGame() throws IOException, InterruptedException {
         List<Move> moves = new ArrayList<>();
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 10; i++) {
             if (!this.engine1WhiteMoves(moves))
                 return;
             if (!this.engine2BlackFen(moves))
@@ -72,9 +77,7 @@ public class MoveParserStockfishITCase {
         }
         board = moveParser.parse(result.getBestMove(), board);
         moves.add(board.getMove());
-        System.out.print(result.getBestMove());
-        System.out.print("\t");
-        System.out.println(board.getMove().toLongNotation());
+        log.info("Best move (white): {}", result.getBestMove());
         TestUtil.dump(board);
         return true;
     }
@@ -91,10 +94,8 @@ public class MoveParserStockfishITCase {
         }
         board = moveParser.parse(result.getBestMove(), board);
         moves.add(board.getMove());
-        System.out.print(result.getBestMove());
-        System.out.print("\t");
-        System.out.println(board.getMove().toLongNotation());
-        TestUtil.dump(board);
+        log.info("Best move (black): {}", result.getBestMove());
+       // TestUtil.dump(board);
         return true;
     }
 

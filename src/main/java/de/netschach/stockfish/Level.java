@@ -1,4 +1,4 @@
 package de.netschach.stockfish;
 
-class Lovel {
+public record Level(int value) {
 }

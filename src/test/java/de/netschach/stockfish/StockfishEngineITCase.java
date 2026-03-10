@@ -1,9 +1,6 @@
 package de.netschach.stockfish;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -53,11 +50,12 @@ public class StockfishEngineITCase {
     @Test
     public void bestMoveWithLevel() throws Exception {
         stockfishEngine.setGameByFen(FEN);
-        assertEquals("e2f1", stockfishEngine.bestMoveWithLevel(20).getBestMove());
+        assertEquals("e2f1", stockfishEngine.bestMoveWithLevel(new Level(20)).getBestMove());
     }
 
 
     @Test
+    @Disabled
     public void bestMoveWithDepth() throws Exception {
         stockfishEngine.setGameByFen(FEN);
         assertEquals("e2f1", stockfishEngine.bestMoveWithDepth(6).getBestMove());

@@ -19,7 +19,10 @@ class StockfishTask {
     private int timeLimit;
 
     @Setter
-    private int level;
+    private Level level;
+
+    @Setter
+    private Elo elo;
 
     @Setter
     private Integer waitingTime;
