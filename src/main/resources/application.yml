@@ -1,4 +1,4 @@
-hosts-allowed: localhost,0:0:0:0:0:1,0:0:0:0:0:0:0:1,127.0.0.1
+hosts-allowed: localhost,0:0:0:0:0:1,0:0:0:0:0:0:0:1,127.0.0.1,host.docker.internal
 
 logging:
   config: classpath:logback-spring.xml
