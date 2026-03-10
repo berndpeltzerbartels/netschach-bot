@@ -1,9 +1,0 @@
-version: "3.5"
-services:
-  chess-bot:
-    image: berndpb/chess-service2
-    restart: always
-    ports:
-      - "80:8080"
-    environment:
-      - "SPRING_PROFILES_ACTIVE=pivotal"

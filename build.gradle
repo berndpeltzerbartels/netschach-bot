@@ -5,10 +5,24 @@ plugins {
 }
 
 group = 'de.netschach'
-version = '2.0.18'
+version = '3.0.0'
 
 bootJar {
     archiveFileName = 'netschach-bot.jar'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+        showStandardStreams = false
+        exceptionFormat = "full"
+    }
+}
+
+bootRun {
+    jvmArgs = ['-Xmx160m', '-Xms160m']
+    args = ['--spring.profiles.active=prod']
 }
 
 springBoot {
