@@ -7,6 +7,10 @@ plugins {
 group = 'de.netschach'
 version = '2.0.18'
 
+bootJar {
+    archiveFileName = 'netschach-bot.jar'
+}
+
 repositories {
     mavenCentral()
 }

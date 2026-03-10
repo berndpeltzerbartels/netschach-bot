@@ -7,4 +7,4 @@ RUN git clone -c credential.helper= https://github.com/berndpeltzerbartels/netsc
     ./gradlew bootJar -x test --no-daemon
 
 ENV PATH="/usr/games/:${PATH}"
-ENTRYPOINT ["java", "-jar", "/app/build/libs/chess-service2-2.0.18.jar"]
+ENTRYPOINT ["java", "-jar", "/app/build/libs/netschach-bot.jar"]
