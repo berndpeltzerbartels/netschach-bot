@@ -27,7 +27,7 @@ curl -s -X PUT http://localhost:8080/api/game/v2/bestmove \
   -H "Content-Type: application/json" \
   -d '{
     "requestId": "testrequest001",
-    "elo": 3000,
+    "level": 3,
     "timeLimitMillis": 1000,
     "fen": "4k3/2Q5/R7/8/8/8/8/4K3 w - - 0 1",
     "moves": ["a6e6", "e8f8", "c7e7"],
