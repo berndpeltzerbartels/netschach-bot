@@ -1,1 +1,1 @@
-hosts-allowed: netschach.de
+hosts-allowed: netschach.de,172.17.0.1
