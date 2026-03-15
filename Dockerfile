@@ -15,4 +15,4 @@ RUN git clone -c credential.helper= https://github.com/berndpeltzerbartels/netsc
 
 ENV PATH="/usr/games/:${PATH}"
 RUN mkdir -p /var/log/netschach
-ENTRYPOINT ["java", "-Xmx160m", "-Xms160m", "-Dspring.profiles.active=prod", "-jar", "/app/build/libs/netschach-bot.jar"]
+ENTRYPOINT ["java", "-Xmx160m", "-Xms160m", "-jar", "/app/build/libs/netschach-bot.jar"]
