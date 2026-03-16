@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 class HealthController {
 
     @GetMapping
-    void health() {
-
+    String health() {
+        return "Version 2.0.0";
     }
 }
