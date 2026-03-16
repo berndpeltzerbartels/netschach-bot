@@ -1,9 +1,10 @@
 package de.netschach.stockfish;
 
 import de.netschach.event.StockfishMovedEvent;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -11,9 +12,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.stream.Collectors;
@@ -45,7 +43,10 @@ class StockfishRunner {
 
     @PreDestroy
     void closeEngine() {
-        this.engine.close();
+        // Engine wird nach jedem Task geschlossen, hier nur zur Sicherheit
+        if (engine.isAlive()) {
+            engine.close();
+        }
     }
 
     @PreDestroy
@@ -79,9 +80,10 @@ class StockfishRunner {
         @Override
         public void run() {
             while (this.run) {
+                StockfishTask task = null;
                 try {
-                    this.openEngine();
-                    StockfishTask task = queue.take();
+                    task = queue.take();
+                    engine.open();
                     String move = this.process(task);
                     publisher.publishEvent(StockfishMovedEvent.builder()
                             .requestId(task.getGameId())
@@ -90,14 +92,10 @@ class StockfishRunner {
                             .callback(task.getCallback())
                             .waitingTime(task.getWaitingTime()).build());
                 } catch (Exception e) {
-                    log.warn(e.toString());
+                    log.warn("Engine {}: Fehler bei Task {}: {}", index, task != null ? task.getGameId() : "?", e.toString());
+                } finally {
+                    engine.close();
                 }
-            }
-        }
-
-        private void openEngine() throws IOException {
-            if (!engine.isAlive()) {
-                engine.open();
             }
         }
 
