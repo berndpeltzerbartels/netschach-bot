@@ -1,0 +1,17 @@
+services:
+
+  netschach-bot:
+    image: netschach-bot
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+    depends_on:
+      - echo
+
+  echo:
+    build:
+      context: ../..
+      dockerfile: docker/echo/Dockerfile
+    ports:
+      - "8000:8000"

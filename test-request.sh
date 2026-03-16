@@ -1,21 +1,13 @@
 #!/bin/bash
-# Startet den Echo-Server (Callback-Empfänger) und schickt eine Test-Request an den Java-Service.
+# Schickt eine Test-Request an den Java-Service (läuft via Docker Compose).
 #
 # Voraussetzungen:
-#   - Java-Service läuft auf localhost:8080
-#   - Node.js installiert (für echo.js)
+#   - Docker Compose läuft: cd docker/compose && docker-compose up -d
 #
 # Verwendung: ./test-request.sh
 
-# host.docker.internal wird von Docker automatisch auf die Mac-IP aufgelöst
-HOST_IP="host.docker.internal"
+HOST_IP="echo"
 echo ">>> Callback-Host: $HOST_IP"
-
-# Echo-Server starten (empfängt den Callback vom Java-Service)
-echo ">>> Starte Echo-Server auf Port 8000..."
-node echo.js &
-ECHO_PID=$!
-sleep 1
 
 # Endspielposition: Weiß König e1, Dame c7, Turm a6 / Schwarz König e8
 # Nach 3 Zügen hat Schwarz (Stockfish) genau einen legalen Zug: e8d8
@@ -33,7 +25,7 @@ curl -s -X PUT http://localhost:8080/api/game/v2/bestmove \
     "moves": ["a6e6", "e8f8", "c7e7"],
     "callback": {
       "protocol": "http",
-      "host": "'$HOST_IP'",
+      "host": "echo",
       "port": 8000,
       "uri": "/callback"
     }
@@ -42,10 +34,7 @@ curl -s -X PUT http://localhost:8080/api/game/v2/bestmove \
 echo ""
 echo ">>> Request gesendet. Warte auf Callback..."
 echo ">>> Erwarteter Zug von Stockfish: f8g8 (einziger legaler Zug)"
+sleep 3
 echo ""
-echo ">>> Java-Service Logs live:"
-docker logs -f netschach-bot &
-LOGS_PID=$!
-echo ">>> (Strg+C zum Beenden)"
-wait $ECHO_PID
-kill $LOGS_PID 2>/dev/null
+echo ">>> Echo-Server Logs (Callback-Antwort von netschach-bot):"
+docker logs compose-echo-1
