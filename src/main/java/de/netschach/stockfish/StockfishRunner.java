@@ -94,7 +94,9 @@ class StockfishRunner {
         }
 
         private void openEngine() throws Exception {
-            engine.close();
+            if (engine.isAlive()) {
+                engine.close();
+            }
             engine.open();
         }
 
