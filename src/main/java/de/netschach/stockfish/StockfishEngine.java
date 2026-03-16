@@ -68,6 +68,7 @@ class StockfishEngine {
         this.engineProcess = Runtime.getRuntime().exec(stockfishPath);
         this.processReader = new BufferedReader(new InputStreamReader(this.engineProcess.getInputStream()));
         this.processWriter = new BufferedWriter(new OutputStreamWriter(this.engineProcess.getOutputStream()));
+        this.sendCommand("uci");
     }
 
     synchronized boolean isAlive() {
