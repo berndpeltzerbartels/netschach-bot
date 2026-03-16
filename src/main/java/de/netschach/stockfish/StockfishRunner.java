@@ -78,27 +78,25 @@ class StockfishRunner {
         public void run() {
             while (this.run) {
                 try {
-                    this.openEngine();
                     StockfishTask task = queue.take();
-                    String move = this.process(task);
-                    publisher.publishEvent(StockfishMovedEvent.builder()
-                            .requestId(task.getGameId())
-                            .move(move)
-                            .gameBoard(task.getGameBoard())
-                            .callback(task.getCallback())
-                            .waitingTime(task.getWaitingTime()).build());
+                    try {
+                        engine.open();
+                        String move = this.process(task);
+                        publisher.publishEvent(StockfishMovedEvent.builder()
+                                .requestId(task.getGameId())
+                                .move(move)
+                                .gameBoard(task.getGameBoard())
+                                .callback(task.getCallback())
+                                .waitingTime(task.getWaitingTime()).build());
+                    } finally {
+                        engine.close();
+                    }
                 } catch (Exception e) {
                     log.warn(e.toString());
                 }
             }
         }
 
-        private void openEngine() throws Exception {
-            if (engine.isAlive()) {
-                engine.close();
-            }
-            engine.open();
-        }
 
         private String process(StockfishTask queueElement) throws Exception {
             log.info("Engine {}: processing {}, level: {}, timelimit: {}ms", index, queueElement.getGameId(), queueElement.getLevel(), queueElement.getTimeLimit());
