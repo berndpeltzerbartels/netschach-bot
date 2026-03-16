@@ -102,6 +102,7 @@ class StockfishRunner {
         private void openEngine() throws IOException {
             if (!engine.isAlive()) {
                 engine.open();
+                engine.sendCommand("uci");
             }
         }
 
