@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'de.netschach'
-version = '3.0.12'
+version = '3.0.13'
 
 bootJar {
     archiveFileName = 'netschach-bot.jar'
