@@ -15,7 +15,7 @@ echo ">>> Callback-Host: $HOST_IP"
 # Züge (UCI): a6e6 (Turm e6), e8f8 (König muss nach f8), c7e7 (Dame e7 - Schach)
 # → Schwarz hat nur noch d8: e7xd8 ist nicht möglich, einziger Zug ist f8g8
 echo ">>> Schicke Request an http://localhost:8080/api/game/v2/bestmove ..."
-curl -s -X PUT http://localhost:8080/api/game/v2/bestmove \
+HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X PUT http://localhost:8080/api/game/v2/bestmove \
   -H "Content-Type: application/json" \
   -d '{
     "requestId": "testrequest001",
@@ -29,7 +29,8 @@ curl -s -X PUT http://localhost:8080/api/game/v2/bestmove \
       "port": 8000,
       "uri": "/callback"
     }
-  }'
+  }')
+echo ">>> HTTP-Status: $HTTP_STATUS"
 
 echo ""
 echo ">>> Request gesendet. Warte auf Callback..."
