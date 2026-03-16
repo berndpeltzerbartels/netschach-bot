@@ -93,7 +93,7 @@ class StockfishRunner {
                         engine.close();
                     }
                 } catch (Exception e) {
-                    log.warn(e.toString());
+                    log.error("run failed", e);
                 }
             }
         }
