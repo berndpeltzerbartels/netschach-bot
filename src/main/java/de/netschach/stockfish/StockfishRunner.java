@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.stream.Collectors;
@@ -80,7 +81,7 @@ class StockfishRunner {
                 try {
                     StockfishTask task = queue.take();
                     try {
-                        engine.open();
+                        this.openEngine();
                         String move = this.process(task);
                         publisher.publishEvent(StockfishMovedEvent.builder()
                                 .requestId(task.getGameId())
@@ -94,6 +95,14 @@ class StockfishRunner {
                 } catch (Exception e) {
                     log.warn(e.toString());
                 }
+            }
+        }
+
+
+        private void openEngine() throws IOException {
+            if (!engine.isAlive()) {
+                engine.open();
+                engine.sendCommand("uci"); // Sonst geht Elo nicht
             }
         }
 

@@ -1,7 +1,6 @@
 package de.netschach.stockfish;
 
 import de.netschach.StreamUtil;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -69,7 +68,6 @@ class StockfishEngine {
         this.engineProcess = Runtime.getRuntime().exec(stockfishPath);
         this.processReader = new BufferedReader(new InputStreamReader(this.engineProcess.getInputStream()));
         this.processWriter = new BufferedWriter(new OutputStreamWriter(this.engineProcess.getOutputStream()));
-        this.sendCommand("uci"); // Sonst geht Elo nicht
     }
 
     synchronized boolean isAlive() {
