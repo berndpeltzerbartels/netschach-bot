@@ -68,7 +68,6 @@ class StockfishEngine {
         this.engineProcess = Runtime.getRuntime().exec(stockfishPath);
         this.processReader = new BufferedReader(new InputStreamReader(this.engineProcess.getInputStream()));
         this.processWriter = new BufferedWriter(new OutputStreamWriter(this.engineProcess.getOutputStream()));
-        this.waitForReady();
     }
 
     synchronized boolean isAlive() {
@@ -186,13 +185,13 @@ class StockfishEngine {
     }
 
     synchronized void waitForReady() throws IOException {
-        this.sendCommand("isready");
-        String line;
-        while ((line = this.processReader.readLine()) != null) {
-            if (line.trim().equals("readyok")) {
-                return;
-            }
-        }
+        /*
+        this.responseReader.setResponseHandler(line -> {
+            if (line.trim().equals("readyok"))
+            return null;
+        });
+        */
+
     }
 
     private String readOutput(String key) throws IOException {

@@ -98,8 +98,7 @@ class StockfishRunner {
             }
         }
 
-
-        private synchronized void openEngine() throws IOException {
+        private void openEngine() throws IOException {
             if (!engine.isAlive()) {
                 engine.open();
                 //   engine.uci();
