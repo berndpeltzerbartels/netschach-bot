@@ -108,6 +108,18 @@ class StockfishEngine {
         this.setOption("UCI_Elo", elo.value());
     }
 
+
+    synchronized void uci() throws IOException {
+        this.sendCommand("uci");
+        String line;
+        while ((line = this.processReader.readLine()) != null) {
+            if (line.trim().equals("uciok")) {
+                return;
+            }
+            log.info("uci output: {}", line);
+        }
+    }
+
     synchronized void setMinimumThinkingTime(int timeMillis) throws IOException {
         this.setOption("Minimum Thinking Time", timeMillis);
     }

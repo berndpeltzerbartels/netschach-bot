@@ -99,10 +99,10 @@ class StockfishRunner {
         }
 
 
-        private void openEngine() throws IOException {
+        private synchronized void openEngine() throws IOException {
             if (!engine.isAlive()) {
                 engine.open();
-                engine.sendCommand("uci");
+                engine.uci();
             }
         }
 
