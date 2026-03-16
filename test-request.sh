@@ -25,7 +25,7 @@ HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X PUT http://localhost:808
     "moves": ["a6e6", "e8f8", "c7e7"],
     "callback": {
       "protocol": "http",
-      "host": "echo",
+      "host": "localhost",
       "port": 8000,
       "uri": "/callback"
     }
