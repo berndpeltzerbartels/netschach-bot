@@ -19,10 +19,9 @@ HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X PUT http://localhost:808
   -H "Content-Type: application/json" \
   -d '{
     "requestId": "testrequest001",
-    "level": 3,
+    "elo": 2000,
     "timeLimitMillis": 1000,
-    "fen": "4k3/2Q5/R7/8/8/8/8/4K3 w - - 0 1",
-    "moves": ["a6e6", "e8f8", "c7e7"],
+    "moves": [],
     "callback": {
       "protocol": "http",
       "host": "localhost",
