@@ -1,7 +1,7 @@
 services:
 
   netschach-bot:
-    image: netschach-bot
+    image: netschach-bot:latest
     ports:
       - "8080:8080"
     depends_on:

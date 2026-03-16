@@ -43,10 +43,7 @@ class StockfishRunner {
 
     @PreDestroy
     void closeEngine() {
-        // Engine wird nach jedem Task geschlossen, hier nur zur Sicherheit
-        if (engine.isAlive()) {
-            engine.close();
-        }
+        this.engine.close();
     }
 
     @PreDestroy
@@ -80,10 +77,9 @@ class StockfishRunner {
         @Override
         public void run() {
             while (this.run) {
-                StockfishTask task = null;
                 try {
-                    task = queue.take();
-                    engine.open();
+                    this.openEngine();
+                    StockfishTask task = queue.take();
                     String move = this.process(task);
                     publisher.publishEvent(StockfishMovedEvent.builder()
                             .requestId(task.getGameId())
@@ -92,11 +88,14 @@ class StockfishRunner {
                             .callback(task.getCallback())
                             .waitingTime(task.getWaitingTime()).build());
                 } catch (Exception e) {
-                    log.warn("Engine {}: Fehler bei Task {}: {}", index, task != null ? task.getGameId() : "?", e.toString());
-                } finally {
-                    engine.close();
+                    log.warn(e.toString());
                 }
             }
+        }
+
+        private void openEngine() throws Exception {
+            engine.close();
+            engine.open();
         }
 
         private String process(StockfishTask queueElement) throws Exception {
