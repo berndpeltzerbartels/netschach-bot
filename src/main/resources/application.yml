@@ -1,3 +1,6 @@
+spring:
+  application:
+    name: netschach-bot
+
 logging:
   config: classpath:logback-spring.xml
-
